@@ -43,7 +43,7 @@ $("uploadForm").addEventListener("submit",async e=>{
  const author=$("author").value.trim(),title=$("title").value.trim(),description=$("description").value.trim();
  const btn=$("submitUpload");btn.disabled=true;btn.textContent="Enviando...";
  try{
-  let payload={kind,author,title,description,status:"pending"};
+  let payload={kind,author,title,description,status:"approved"};
   if(kind==="youtube"){const url=$("youtubeUrl").value.trim();if(!ytId(url))throw Error("Cole um link válido do YouTube.");payload.youtube_url=url;}
   else{
    const file=$("videoFile").files[0];if(!file)throw Error("Escolha um arquivo de vídeo.");if(file.size>MAX_FILE_SIZE)throw Error("O arquivo passa de 50 MB. Escolha um vídeo menor.");
