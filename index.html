@@ -1,126 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="PlayVerso - descubra vídeos, canais e transmissões." />
-  <title>PlayVerso — Vídeos para descobrir</title>
-  <style>
-    :root{--bg:#0f1014;--panel:#181a20;--panel2:#20232b;--text:#f5f6fa;--muted:#a2a6b2;--line:#2b2e38;--accent:#7657ff;--accent2:#9a83ff}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    button,input{font:inherit}button{cursor:pointer}.topbar{height:68px;position:sticky;top:0;z-index:5;background:rgba(15,16,20,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:24px;padding:0 26px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:850;font-size:23px;letter-spacing:-1px;white-space:nowrap}.brand-mark{width:35px;height:35px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#bd55e8);display:grid;place-items:center;box-shadow:0 6px 22px #7657ff55}.brand-mark:after{content:"";border-left:11px solid white;border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:3px}
-    .search{max-width:620px;flex:1;margin:auto;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:28px;overflow:hidden}.search input{flex:1;min-width:0;background:transparent;color:white;border:0;padding:12px 18px;outline:none}.search button{width:54px;border:0;background:var(--panel2);color:white;font-size:18px}
-    .top-actions{display:flex;gap:10px;align-items:center}.btn{border:1px solid var(--line);background:var(--panel2);color:white;border-radius:24px;padding:10px 16px;font-weight:650}.btn.primary{background:var(--accent);border-color:var(--accent)}.btn:hover{filter:brightness(1.13)}
-    .layout{display:grid;grid-template-columns:225px minmax(0,1fr);min-height:calc(100vh - 68px)}aside{padding:22px 14px;border-right:1px solid var(--line);position:sticky;top:68px;height:calc(100vh - 68px)}.nav-title{color:var(--muted);font-size:11px;font-weight:800;letter-spacing:1.2px;padding:8px 13px}.nav-item{width:100%;display:flex;gap:13px;align-items:center;padding:12px 14px;border:0;background:transparent;color:#d7d9e0;text-align:left;border-radius:12px;margin:2px 0}.nav-item:hover,.nav-item.active{background:#272333;color:white}.nav-icon{width:20px;text-align:center;font-size:17px}.aside-note{margin:24px 10px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
-    main{padding:25px clamp(18px,3vw,42px) 50px;min-width:0}.hero{background:radial-gradient(circle at 80% 15%,#7958ff66,transparent 30%),linear-gradient(110deg,#25203b,#191a26 65%,#242033);border:1px solid #40365e;border-radius:20px;padding:28px 32px;margin-bottom:26px;display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden}.hero h1{font-size:clamp(24px,3vw,36px);margin:0 0 8px;letter-spacing:-1.2px}.hero p{margin:0;color:#c4c0d4;max-width:550px}.hero .btn{margin-top:18px}.hero-art{font-size:76px;filter:drop-shadow(0 10px 24px #0007);padding:0 25px}
-    .chips{display:flex;gap:9px;overflow:auto;padding:0 0 22px;scrollbar-width:none}.chip{border:1px solid var(--line);background:var(--panel);color:#d7d9e0;border-radius:20px;padding:8px 15px;white-space:nowrap}.chip.active,.chip:hover{background:white;color:#15151a;border-color:white}
-    .section-head{display:flex;align-items:center;justify-content:space-between;margin:4px 0 17px}.section-head h2{font-size:21px;margin:0;letter-spacing:-.4px}.subtle{color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:25px 18px}.video-card{min-width:0;cursor:pointer}.thumb{aspect-ratio:16/9;border-radius:14px;overflow:hidden;position:relative;background:#252833}.thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}.video-card:hover .thumb img{transform:scale(1.045)}.duration{position:absolute;right:9px;bottom:9px;background:#08090bdc;color:white;padding:3px 7px;border-radius:5px;font-size:11px;font-weight:750}.video-info{display:flex;gap:11px;padding-top:12px}.avatar{width:37px;height:37px;flex:0 0 37px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#7657ff,#d15be9);font-weight:800}.video-info h3{font-size:14px;line-height:1.35;margin:0 0 6px;font-weight:700}.video-info p{font-size:12px;color:var(--muted);margin:2px 0}.empty{padding:50px 20px;text-align:center;color:var(--muted);grid-column:1/-1}
-    .overlay{display:none;position:fixed;inset:0;background:#000b;z-index:10;overflow:auto;padding:35px 15px}.overlay.show{display:block}.modal{max-width:900px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}.modal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.close{border:0;background:var(--panel2);color:white;border-radius:50%;width:36px;height:36px;font-size:20px}.player{width:100%;aspect-ratio:16/9;background:#050505;border-radius:12px}.modal h2{font-size:21px;margin:15px 0 6px}.modal-meta{color:var(--muted);font-size:13px}.modal-actions{display:flex;gap:10px;margin:16px 0}.comments{border-top:1px solid var(--line);padding-top:14px}.comments h3{font-size:16px}.comment-form{display:flex;gap:8px}.comment-form input{flex:1;min-width:0;background:#101116;border:1px solid var(--line);color:white;border-radius:10px;padding:11px}.comment{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}.comment strong{margin-right:8px}
-    .upload-box{max-width:560px;margin:35px auto;background:var(--panel);border:1px solid var(--line);padding:25px;border-radius:18px}.upload-box h2{margin-top:0}.field{display:block;margin:14px 0;color:var(--muted);font-size:13px}.field input,.field select{display:block;width:100%;margin-top:7px;padding:11px;background:#101116;border:1px solid var(--line);border-radius:9px;color:white}.field input[type=file]{padding:9px}.notice{color:var(--muted);font-size:12px;line-height:1.5;margin-top:15px}
-    footer{border-top:1px solid var(--line);padding:22px 0;margin-top:45px;color:var(--muted);font-size:12px}
-    @media(max-width:1050px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:190px 1fr}}
-    @media(max-width:720px){.topbar{padding:0 13px;gap:12px;height:60px}.brand{font-size:19px}.brand-mark{width:31px;height:31px}.top-actions .btn span{display:none}.top-actions .btn{padding:9px 12px}.layout{display:block}aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px;display:flex;overflow:auto;gap:4px}.nav-title,.aside-note{display:none}.nav-item{width:auto;white-space:nowrap;padding:9px 12px;font-size:13px}.nav-icon{display:none}main{padding:17px 14px 35px}.hero{padding:22px}.hero-art{font-size:48px;padding:0}.grid{gap:20px 12px}.video-info{gap:8px}.avatar{width:31px;height:31px;flex-basis:31px}.video-info h3{font-size:13px}.search input{padding:10px 12px}.search{margin:0}.top-actions .btn.primary{font-size:0}.top-actions .btn.primary:after{content:"＋";font-size:20px}.overlay{padding:12px 7px}.modal{padding:12px}}
-    @media(max-width:430px){.grid{grid-template-columns:1fr}.hero-art{display:none}.hero{padding:20px}.brand{font-size:17px}.topbar{gap:8px}.search button{width:40px}}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b14">
+  <title>VersoParty — vídeos para todo mundo</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<header class="topbar">
-  <div class="brand"><span class="brand-mark"></span>PlayVerso</div>
-  <form class="search" id="searchForm"><input id="searchInput" placeholder="Pesquisar vídeos..." aria-label="Pesquisar vídeos"><button aria-label="Pesquisar">⌕</button></form>
-  <div class="top-actions"><button class="btn primary" id="openUpload">＋ <span>Enviar vídeo</span></button></div>
-</header>
-<div class="layout">
-  <aside>
-    <div class="nav-title">MENU</div>
-    <button class="nav-item active" data-page="home"><span class="nav-icon">⌂</span>Início</button>
-    <button class="nav-item" data-category="Ao vivo"><span class="nav-icon">◉</span>Ao vivo</button>
-    <button class="nav-item" data-category="Música"><span class="nav-icon">♫</span>Música</button>
-    <button class="nav-item" data-category="Jogos"><span class="nav-icon">▣</span>Jogos</button>
-    <button class="nav-item" data-category="Curiosidades"><span class="nav-icon">✦</span>Curiosidades</button>
-    <button class="nav-item" data-category="Entretenimento"><span class="nav-icon">▤</span>Entretenimento</button>
-    <div class="aside-note">Descubra algo novo todos os dias.<br><br>© 2026 PlayVerso</div>
-  </aside>
-  <main>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-icon">▶</span> Verso<span>Party</span></a>
+    <span class="tagline">Vídeos para assistir e compartilhar</span>
+    <button class="primary small" id="openUpload">＋ Enviar vídeo</button>
+  </header>
+
+  <main class="container">
     <section class="hero">
-      <div><h1>Seu próximo vídeo favorito está aqui.</h1><p>Explore conteúdos, descubra criadores e encontre algo interessante para assistir.</p><button class="btn" id="exploreBtn">Explorar vídeos ↓</button></div>
-      <div class="hero-art">▶</div>
+      <div>
+        <p class="eyebrow">SUA COMUNIDADE DE VÍDEOS</p>
+        <h1>Descubra. Compartilhe.<br><span>Assista junto.</span></h1>
+        <p class="sub">Envie um vídeo do seu dispositivo ou compartilhe um link do YouTube. Os vídeos passam por aprovação antes de aparecer para todos.</p>
+        <button class="primary" id="heroUpload">Enviar meu vídeo <span>↗</span></button>
+      </div>
+      <div class="hero-art"><div class="orb orb1"></div><div class="orb orb2"></div><div class="play">▶</div><div class="floating f1">🎬</div><div class="floating f2">✨</div></div>
     </section>
-    <div class="chips" id="chips">
-      <button class="chip active" data-filter="Todos">Todos</button>
-      <button class="chip" data-filter="Ao vivo">Ao vivo</button>
-      <button class="chip" data-filter="Música">Música</button>
-      <button class="chip" data-filter="Jogos">Jogos</button>
-      <button class="chip" data-filter="Curiosidades">Curiosidades</button>
-      <button class="chip" data-filter="Entretenimento">Entretenimento</button>
-      <button class="chip" data-filter="Tecnologia">Tecnologia</button>
-    </div>
-    <div class="section-head"><h2 id="sectionTitle">Vídeos recomendados</h2><span class="subtle" id="videoCount"></span></div>
-    <section class="grid" id="videoGrid"></section>
-    <footer>PlayVerso é um projeto independente de compartilhamento de vídeos. Respeite os direitos autorais ao enviar conteúdo.</footer>
+
+    <section class="toolbar">
+      <div><h2>Vídeos da comunidade</h2><p id="videoCount">Carregando vídeos...</p></div>
+      <input id="search" class="search" type="search" placeholder="Buscar vídeos...">
+    </section>
+    <div id="notice" class="notice hidden"></div>
+    <section id="videoGrid" class="grid">
+      <div class="empty">Conecte o Supabase para carregar os vídeos.</div>
+    </section>
+    <footer>© <span id="year"></span> VersoParty · Compartilhe com respeito e publique apenas conteúdo que você tem direito de compartilhar.</footer>
   </main>
-</div>
 
-<div class="overlay" id="playerOverlay"><div class="modal">
-  <div class="modal-top"><strong>▶ PlayVerso</strong><button class="close" data-close="playerOverlay">×</button></div>
-  <video class="player" id="videoPlayer" controls playsinline></video>
-  <h2 id="modalTitle"></h2><div class="modal-meta" id="modalMeta"></div>
-  <div class="modal-actions"><button class="btn" id="likeBtn">♡ Curtir <span id="likeCount"></span></button><button class="btn" id="shareBtn">↗ Compartilhar</button></div>
-  <div class="comments"><h3>Comentários</h3><form class="comment-form" id="commentForm"><input id="commentInput" placeholder="Escreva um comentário..." maxlength="250" required><button class="btn primary">Enviar</button></form><div id="commentList"></div></div>
-</div></div>
+  <dialog id="uploadDialog">
+    <form id="uploadForm" class="dialog-content">
+      <button type="button" class="close" id="closeUpload" aria-label="Fechar">×</button>
+      <p class="eyebrow">COMPARTILHE COM A COMUNIDADE</p>
+      <h2>Enviar um vídeo</h2>
+      <label>Seu nome<input id="author" maxlength="40" required placeholder="Como devemos chamar você?"></label>
+      <label>Título do vídeo<input id="title" maxlength="90" required placeholder="Dê um título"></label>
+      <label>Descrição<textarea id="description" maxlength="400" rows="3" placeholder="Conte um pouco sobre o vídeo"></textarea></label>
+      <div class="choice">
+        <label class="radio"><input type="radio" name="kind" value="file" checked> Arquivo do dispositivo</label>
+        <label class="radio"><input type="radio" name="kind" value="youtube"> Link do YouTube</label>
+      </div>
+      <div id="fileArea"><label>Escolha o vídeo (MP4, WebM ou MOV)<input id="videoFile" type="file" accept="video/mp4,video/webm,video/quicktime"></label><small>Limite recomendado: 50 MB por vídeo no plano gratuito configurado.</small></div>
+      <div id="youtubeArea" class="hidden"><label>Link do YouTube<input id="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..."></label></div>
+      <p class="consent">Ao enviar, você confirma que tem autorização para compartilhar o vídeo. Seu envio ficará pendente até a aprovação do administrador.</p>
+      <button class="primary full" id="submitUpload" type="submit">Enviar para aprovação</button>
+      <p id="formStatus" class="form-status" role="status"></p>
+    </form>
+  </dialog>
 
-<div class="overlay" id="uploadOverlay"><div class="upload-box">
-  <div class="modal-top"><h2>Enviar vídeo</h2><button class="close" data-close="uploadOverlay">×</button></div>
-  <form id="uploadForm">
-    <label class="field">Título do vídeo<input id="uploadTitle" required maxlength="90" placeholder="Dê um título ao seu vídeo"></label>
-    <label class="field">Nome do canal<input id="uploadChannel" required maxlength="40" placeholder="Seu nome ou canal"></label>
-    <label class="field">Categoria<select id="uploadCategory"><option>Entretenimento</option><option>Curiosidades</option><option>Música</option><option>Jogos</option><option>Tecnologia</option></select></label>
-    <label class="field">Arquivo de vídeo<input id="uploadFile" type="file" accept="video/*" required></label>
-    <button class="btn primary" type="submit">Publicar vídeo</button>
-    <p class="notice">Demonstração local: o vídeo fica disponível neste navegador enquanto a página estiver aberta. Para publicar vídeos para todos na internet, será necessário conectar armazenamento, banco de dados e hospedagem.</p>
-  </form>
-</div></div>
-
-<script>
-const sampleVideos = [
- {id:1,title:"10 curiosidades que parecem mentira, mas são verdade",channel:"Mundo Curioso",category:"Curiosidades",views:"24 mil visualizações",age:"há 2 dias",duration:"08:42",thumb:"https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=900&q=85",src:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",likes:128},
- {id:2,title:"Uma viagem incrível por lugares que parecem de outro planeta",channel:"Explore Mais",category:"Entretenimento",views:"18 mil visualizações",age:"há 1 dia",duration:"12:16",thumb:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=85",src:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",likes:94},
- {id:3,title:"As melhores paisagens para relaxar e esquecer do tempo",channel:"Natureza Viva",category:"Música",views:"56 mil visualizações",age:"há 5 dias",duration:"15:03",thumb:"https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=900&q=85",src:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",likes:302},
- {id:4,title:"Gameplay: explorando um mundo totalmente desconhecido",channel:"Player X",category:"Jogos",views:"9,2 mil visualizações",age:"há 3 horas",duration:"21:35",thumb:"https://images.unsplash.com/photo-1542751371-adc38448a05e?w=900&q=85",src:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",likes:71},
- {id:5,title:"Tecnologia do futuro: o que vem por aí?",channel:"Tech Hoje",category:"Tecnologia",views:"31 mil visualizações",age:"há 1 semana",duration:"10:28",thumb:"https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=85",src:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",likes:215},
- {id:6,title:"Ao vivo: música e conversa para acompanhar seu dia",channel:"Play ao Vivo",category:"Ao vivo",views:"Ao vivo agora",age:"transmissão",duration:"AO VIVO",thumb:"https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=900&q=85",src:"https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",likes:47}
-];
-let videos=[...sampleVideos], activeVideo=null, filter="Todos", query="";
-const $=s=>document.querySelector(s);
-function render(){
- const list=videos.filter(v=>(filter==="Todos"||v.category===filter)&&(`${v.title} ${v.channel} ${v.category}`).toLowerCase().includes(query.toLowerCase()));
- $("#videoGrid").innerHTML=list.length?list.map(v=>`<article class="video-card" data-id="${v.id}"><div class="thumb"><img src="${v.thumb}" alt="" loading="lazy"><span class="duration">${v.duration}</span></div><div class="video-info"><div class="avatar">${escapeHtml(v.channel[0].toUpperCase())}</div><div><h3>${escapeHtml(v.title)}</h3><p>${escapeHtml(v.channel)}</p><p>${v.views} · ${v.age}</p></div></div></article>`).join(""):`<div class="empty">Nenhum vídeo encontrado. Tente outra pesquisa ou categoria.</div>`;
- $("#videoCount").textContent=`${list.length} vídeo(s)`;
- $("#sectionTitle").textContent=filter==="Todos"?"Vídeos recomendados":filter;
- document.querySelectorAll(".video-card").forEach(card=>card.addEventListener("click",()=>openVideo(Number(card.dataset.id))));
-}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function openVideo(id){
- activeVideo=videos.find(v=>v.id===id);if(!activeVideo)return;
- $("#modalTitle").textContent=activeVideo.title;$("#modalMeta").textContent=`${activeVideo.channel} · ${activeVideo.views} · ${activeVideo.age}`;
- $("#videoPlayer").src=activeVideo.src;$("#likeCount").textContent=activeVideo.likes;$("#likeBtn").dataset.liked="false";$("#likeBtn").innerHTML=`♡ Curtir <span id="likeCount">${activeVideo.likes}</span>`;
- renderComments();$("#playerOverlay").classList.add("show");
-}
-function renderComments(){const arr=JSON.parse(localStorage.getItem("pv-comments-"+activeVideo.id)||"[]");$("#commentList").innerHTML=arr.length?arr.map(c=>`<div class="comment"><strong>Visitante</strong>${escapeHtml(c)}</div>`).join(""):`<p class="subtle">Ainda não há comentários. Seja o primeiro!</p>`;}
-document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>{const el=$("#"+b.dataset.close);el.classList.remove("show");if(b.dataset.close==="playerOverlay"){$("#videoPlayer").pause();$("#videoPlayer").removeAttribute("src");}});
-$("#playerOverlay").addEventListener("click",e=>{if(e.target.id==="playerOverlay"){$("#playerOverlay").classList.remove("show");$("#videoPlayer").pause();}});
-$("#uploadOverlay").addEventListener("click",e=>{if(e.target.id==="uploadOverlay")e.currentTarget.classList.remove("show")});
-$("#openUpload").onclick=()=>$("#uploadOverlay").classList.add("show");
-$("#exploreBtn").onclick=()=>document.querySelector(".chips").scrollIntoView({behavior:"smooth"});
-$("#searchForm").addEventListener("submit",e=>{e.preventDefault();query=$("#searchInput").value.trim();render()});
-document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));render()});
-document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav-item").forEach(x=>x.classList.toggle("active",x===b));filter=b.dataset.category||"Todos";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter===filter));render()});
-$("#likeBtn").onclick=()=>{if($("#likeBtn").dataset.liked==="true")return;activeVideo.likes++;$("#likeBtn").dataset.liked="true";$("#likeBtn").innerHTML=`♥ Curtido <span id="likeCount">${activeVideo.likes}</span>`};
-$("#shareBtn").onclick=async()=>{try{await navigator.clipboard.writeText(location.href);$("#shareBtn").textContent="✓ Link copiado"}catch{$("#shareBtn").textContent="Copie o endereço do site"}};
-$("#commentForm").onsubmit=e=>{e.preventDefault();const val=$("#commentInput").value.trim();if(!val)return;const key="pv-comments-"+activeVideo.id;const arr=JSON.parse(localStorage.getItem(key)||"[]");arr.unshift(val);localStorage.setItem(key,JSON.stringify(arr));$("#commentInput").value="";renderComments()};
-$("#uploadForm").onsubmit=e=>{e.preventDefault();const file=$("#uploadFile").files[0];if(!file)return;const url=URL.createObjectURL(file);videos.unshift({id:Date.now(),title:$("#uploadTitle").value,channel:$("#uploadChannel").value,category:$("#uploadCategory").value,views:"0 visualizações",age:"agora",duration:"NOVO",thumb:"https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=900&q=85",src:url,likes:0});$("#uploadOverlay").classList.remove("show");$("#uploadForm").reset();filter="Todos";document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("active",x.dataset.filter==="Todos"));render();window.scrollTo({top:0,behavior:"smooth"});};
-render();
-</script>
+  <dialog id="videoDialog">
+    <div class="dialog-content watch-content">
+      <button type="button" class="close" id="closeVideo" aria-label="Fechar">×</button>
+      <div id="player"></div>
+      <h2 id="watchTitle"></h2><p id="watchMeta" class="muted"></p><p id="watchDescription"></p>
+      <div class="watch-actions"><button id="likeButton" class="secondary">♡ Curtir <span id="likeCount">0</span></button></div>
+      <section class="comments"><h3>Comentários</h3><form id="commentForm"><input id="commentName" required maxlength="40" placeholder="Seu nome"><input id="commentText" required maxlength="300" placeholder="Escreva um comentário"><button class="primary" type="submit">Enviar</button></form><div id="commentList"></div></section>
+    </div>
+  </dialog>
+  <script src="app.js"></script>
 </body>
 </html>
