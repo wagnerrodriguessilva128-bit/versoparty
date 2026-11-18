@@ -53,11 +53,10 @@ $("uploadForm").addEventListener("submit",async e=>{
    payload.file_path=path;
   }
   const {error}=await db.from("videos").insert(payload);if(error)throw error;
-  $("uploadForm").reset();$("formStatus").textContent="Enviado! Seu vídeo ficará pendente até o administrador aprovar.";notice("Recebemos seu envio. Ele aparecerá para todos depois da aprovação.");
+  $("uploadForm").reset();$("formStatus").textContent="Vídeo publicado com sucesso!";notice("Seu vídeo já está disponível para toda a comunidade.");
  }catch(err){$("formStatus").textContent=err.message||"Erro ao enviar. Tente novamente.";}
- finally{btn.disabled=false;btn.textContent="Enviar para aprovação";}
+ finally{btn.disabled=false;btn.textContent="Publicar vídeo";}
 });
-
 async function openVideo(id){
  activeVideo=videos.find(v=>String(v.id)===String(id));if(!activeVideo)return;
  $("watchTitle").textContent=activeVideo.title;$("watchMeta").textContent=`por ${activeVideo.author}`;$("watchDescription").textContent=activeVideo.description||"";
